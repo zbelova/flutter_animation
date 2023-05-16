@@ -1,8 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hw13_animation/car.dart';
 import 'package:hw13_animation/hero_page.dart';
 
-void main() {
+void main() async {
+  await Future.delayed(const Duration(seconds: 1));
+
+  print('object');
+
   runApp(const AnimationApp());
 }
 
@@ -32,7 +38,8 @@ class AnimationHomePage extends StatefulWidget {
   State<AnimationHomePage> createState() => _AnimationHomePageState();
 }
 
-class _AnimationHomePageState extends State<AnimationHomePage> with TickerProviderStateMixin {
+class _AnimationHomePageState extends State<AnimationHomePage>
+    with TickerProviderStateMixin {
   var players = [
     ['piglet', 'Пятачок', 1100],
     ['owl', "Совунья", 1600],
@@ -54,7 +61,6 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
   @override
   void initState() {
     super.initState();
-
 
     _controller = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -109,7 +115,8 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Expanded(flex: 3,
+            Expanded(
+              flex: 3,
               child: buildTopRow(context),
             ),
             Expanded(
@@ -125,7 +132,6 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-
 
   Widget buildTopRow(BuildContext context) {
     return Row(
@@ -175,7 +181,8 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
                                     child: SizedBox(
                                       //height: 50,
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 15, horizontal: 10),
                                         child: Text(
                                           'Мёд',
                                           style: TextStyle(fontSize: 18),
@@ -217,6 +224,8 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
                                       });
                                       // answerExpanded = !answerExpanded;
                                     }
+
+                                    setState(() {});
                                   },
                                 );
                               },
@@ -245,21 +254,27 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          decoration: BoxDecoration(border: Border.all(color: const Color(0xff39d1ff), width: 3), color: Colors.blue),
+          decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xff39d1ff), width: 3),
+              color: Colors.blue),
           child: const SizedBox(
             width: 20,
             height: 30,
           ),
         ),
         Container(
-          decoration: BoxDecoration(border: Border.all(color: const Color(0xff39d1ff), width: 3), color: Colors.blue),
+          decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xff39d1ff), width: 3),
+              color: Colors.blue),
           child: const SizedBox(
             width: 20,
             height: 30,
           ),
         ),
         Container(
-          decoration: BoxDecoration(border: Border.all(color: const Color(0xff39d1ff), width: 3), color: Colors.blue),
+          decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xff39d1ff), width: 3),
+              color: Colors.blue),
           child: const SizedBox(
             width: 20,
             height: 30,
@@ -290,13 +305,16 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
             PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 700),
               reverseTransitionDuration: const Duration(milliseconds: 700),
-              pageBuilder: (context, animation, secondaryAnimation) => const CarPage(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  const CarPage(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 const begin = Offset(0, 1);
                 const end = Offset.zero;
                 const curve = Curves.bounceOut;
 
-                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                var tween = Tween(begin: begin, end: end)
+                    .chain(CurveTween(curve: curve));
 
                 return SlideTransition(
                   position: animation.drive(tween),
@@ -314,17 +332,11 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
   Widget buildBaraban() {
     return Row(
       children: [
-        const Expanded(
-          flex: 1,
-          child: Center(
-            child: Icon(
-              Icons.arrow_forward,
-              size: 30,
-            ),
-          ),
+        const Icon(
+          Icons.arrow_forward,
+          size: 30,
         ),
         Expanded(
-          flex: 8,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             //crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -337,22 +349,22 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
                     _rotationController.repeat(); // Start the animation
                   }
                 },
-                child: RotationTransition(
-                  turns: _rotationAnimation,
+                child: AnimatedBuilder(
+                  animation: _rotationController,
+                  builder: (context, child) => Transform.rotate(
+                    angle: _rotationAnimation.value * 2.0 * pi,
+                    child: child,
+                  ),
                   child: Column(
-                    children: const [
+                    children: [
                       ClipOval(
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: FadeInImage(
-                            placeholder: AssetImage('assets/prebaraban.jpg'),
-                            image: AssetImage(
-                              'assets/барабан1.jpg',
-                            ),
+                        child: LayoutBuilder(builder: (context, constraints) {
+                          return Image.asset(
+                            'assets/барабан1.jpg',
                             fit: BoxFit.fitWidth,
-                            height: 400,
-                          ),
-                        ),
+                            height: constraints.maxWidth,
+                          );
+                        }),
                       ),
                     ],
                   ),
@@ -383,7 +395,8 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
     );
   }
 
-  Hero buildHero(BuildContext context, String heroTag, String name, int points) {
+  Hero buildHero(
+      BuildContext context, String heroTag, String name, int points) {
     return Hero(
       tag: heroTag,
       child: GestureDetector(
@@ -392,13 +405,16 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
           PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 700),
               reverseTransitionDuration: const Duration(milliseconds: 700),
-              pageBuilder: (context, animation, secondaryAnimation) => PointsScreen(heroTag: heroTag, name: name, points: points),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  PointsScreen(heroTag: heroTag, name: name, points: points),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 const begin = Offset(1.0, 0.0);
                 const end = Offset.zero;
                 const curve = Curves.ease;
 
-                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                var tween = Tween(begin: begin, end: end)
+                    .chain(CurveTween(curve: curve));
 
                 return SlideTransition(
                   position: animation.drive(tween),
@@ -407,7 +423,10 @@ class _AnimationHomePageState extends State<AnimationHomePage> with TickerProvid
               }),
         ),
         child: Container(
-          decoration: BoxDecoration(border: Border.all(color: const Color(0xFFFFFFFF), width: 3), borderRadius: BorderRadius.circular(20.0), color: Colors.white),
+          decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFFFFFFF), width: 3),
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.white),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(17),
             child: AspectRatio(
